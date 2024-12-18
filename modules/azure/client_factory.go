@@ -11,6 +11,8 @@ package azure
 // snippet-tag-start::client_factory_example.imports
 
 import (
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appcontainers/armappcontainers"
 	"os"
 	"reflect"
 
@@ -917,6 +919,19 @@ func CreateDataFactoriesClientE(subscriptionID string) (*datafactory.FactoriesCl
 	dataFactoryClient.Authorizer = *authorizer
 
 	return &dataFactoryClient, nil
+}
+
+func CreateManagedEnvironmentsClientE(subscriptionID string) (*armappcontainers.ManagedEnvironmentsClient, error) {
+	cred, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		return nil, err
+	}
+	clientFactory, err := armappcontainers.NewClientFactory(subscriptionID, cred, nil)
+	if err != nil {
+		return nil, err
+	}
+	client := clientFactory.NewManagedEnvironmentsClient()
+	return client, nil
 }
 
 // GetKeyVaultURISuffixE returns the proper KeyVault URI suffix for the configured Azure environment.
