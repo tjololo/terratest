@@ -78,11 +78,11 @@ resource "azurerm_container_app_job" "aca" {
   replica_timeout_in_seconds   = 10
   template {
     container {
-      name   = "terratest-aca-job-${var.postfix}"
-      image  = "busybox:stable"
+      name    = "terratest-aca-job-${var.postfix}"
+      image   = "busybox:stable"
       command = ["echo", "Hello, World!"]
-      cpu    = "0.5"
-      memory = "1.0Gi"
+      cpu     = "0.5"
+      memory  = "1.0Gi"
     }
   }
   manual_trigger_config {
