@@ -48,3 +48,25 @@ func TestGetContainerAppE(t *testing.T) {
 	_, err := GetContainerAppE(environmentName, resourceGroupName, subscriptionID)
 	require.Error(t, err)
 }
+
+func TestContainerAppJobExists(t *testing.T) {
+	t.Parallel()
+
+	environmentName := ""
+	resourceGroupName := ""
+	subscriptionID := ""
+
+	_, err := ContainerAppJobExistsE(environmentName, resourceGroupName, subscriptionID)
+	require.Error(t, err)
+}
+
+func TestGetContainerJobAppE(t *testing.T) {
+	t.Parallel()
+
+	environmentName := ""
+	resourceGroupName := ""
+	subscriptionID := ""
+
+	_, err := GetContainerAppJobE(environmentName, resourceGroupName, subscriptionID)
+	require.Error(t, err)
+}

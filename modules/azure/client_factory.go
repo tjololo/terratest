@@ -17,7 +17,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/cloud"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appcontainers/armappcontainers"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appcontainers/armappcontainers/v3"
 	"os"
 	"reflect"
 	"strings"
@@ -942,6 +942,15 @@ func CreateContainerAppsClientE(subscriptionID string) (*armappcontainers.Contai
 		return nil, err
 	}
 	client := clientFactory.NewContainerAppsClient()
+	return client, nil
+}
+
+func CreateContainerAppJobsClientE(subscriptionID string) (*armappcontainers.JobsClient, error) {
+	clientFactory, err := getArmAppContainersClientFactory(subscriptionID)
+	if err != nil {
+		return nil, err
+	}
+	client := clientFactory.NewJobsClient()
 	return client, nil
 }
 

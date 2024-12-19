@@ -2,7 +2,7 @@ package azure
 
 import (
 	"context"
-	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appcontainers/armappcontainers"
+	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appcontainers/armappcontainers/v3"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
@@ -65,4 +65,34 @@ func GetContainerAppE(environmentName string, resourceGroupName string, subscrip
 		return nil, err
 	}
 	return &app.ContainerApp, nil
+}
+
+func ContainerAppJobExists(t *testing.T, containerAppName string, resourceGroupName string, subscriptionID string) bool {
+	exists, err := ContainerAppJobExistsE(containerAppName, resourceGroupName, subscriptionID)
+	require.NoError(t, err)
+	return exists
+}
+
+func ContainerAppJobExistsE(containerAppName string, resourceGroupName string, subscriptionID string) (bool, error) {
+	client, err := CreateContainerAppJobsClientE(subscriptionID)
+	if err != nil {
+		return false, err
+	}
+	_, err = client.Get(context.Background(), resourceGroupName, containerAppName, nil)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+func GetContainerAppJobE(environmentName string, resourceGroupName string, subscriptionID string) (*armappcontainers.Job, error) {
+	client, err := CreateContainerAppJobsClientE(subscriptionID)
+	if err != nil {
+		return nil, err
+	}
+	app, err := client.Get(context.Background(), resourceGroupName, environmentName, nil)
+	if err != nil {
+		return nil, err
+	}
+	return &app.Job, nil
 }
