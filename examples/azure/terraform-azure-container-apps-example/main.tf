@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------------------------------------------------------------
 # DEPLOY AN AZURE CONTAINER APPS
-# This is an example of how to deploy an Azure Virtual Machine with the minimum network resources.
+# This is an example of how to deploy an Azure Container App and Azure Container App Job with the minimum set of options.
 # ---------------------------------------------------------------------------------------------------------------------
 # See test/azure/terraform_azure_container_apps_test.go for how to write automated tests for this code.
 # ---------------------------------------------------------------------------------------------------------------------

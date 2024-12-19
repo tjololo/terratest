@@ -1,9 +1,9 @@
-# Terraform Azure Front Door Example
+# Terraform Azure Container Apps Example
 
 This folder contains a simple Terraform module that deploys resources in [Azure](https://azure.microsoft.com/) to demonstrate
 how you can use Terratest to write automated tests for your Azure Terraform code. This module deploys an [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/overview).
 
-Check out [test/azure/terraform_azure_container_apps_example_test.go](./../../../test/azure/terraform_azure_frontdoor_example_test.go) to see how you can write automated tests for this module and validate the configuration of the parameters and options.
+Check out [test/azure/terraform_azure_container_apps_example_test.go](./../../../test/azure/terraform_azure_container_apps_example_test.go) to see how you can write automated tests for this module and validate the configuration of the parameters and options.
 
 **WARNING**: This module and the automated tests for it deploy real resources into your Azure account which can cost you money.
 
@@ -26,5 +26,5 @@ Check out [test/azure/terraform_azure_container_apps_example_test.go](./../../..
 1. Install [Terraform](https://www.terraform.io/) and make sure it's on your `PATH`
 1. Configure your Terratest [Go test environment](../README.md)
 1. `cd test/azure`
-1. `go build terraform_azure_frontdoor_example_test.go`
-1. `go test -v -timeout 60m -tags azure -run TestTerraformAzureFrontDoorExample`
+1. `go build terraform_azure_container_apps_example_test.go`
+1. `go test -v -timeout 60m -tags azure -run TestTerraformAzureContainerAppExample`
