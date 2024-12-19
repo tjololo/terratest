@@ -1,7 +1,7 @@
 # Terraform Azure Container Apps Example
 
 This folder contains a simple Terraform module that deploys resources in [Azure](https://azure.microsoft.com/) to demonstrate
-how you can use Terratest to write automated tests for your Azure Terraform code. This module deploys an [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/overview).
+how you can use Terratest to write automated tests for your Azure Terraform code. This module deploys two [Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/overview) (one app and a job).
 
 Check out [test/azure/terraform_azure_container_apps_example_test.go](./../../../test/azure/terraform_azure_container_apps_example_test.go) to see how you can write automated tests for this module and validate the configuration of the parameters and options.
 
