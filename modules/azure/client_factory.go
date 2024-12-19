@@ -11,10 +11,16 @@ package azure
 // snippet-tag-start::client_factory_example.imports
 
 import (
+	"fmt"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/arm"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/cloud"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appcontainers/armappcontainers"
 	"os"
 	"reflect"
+	"strings"
 
 	"github.com/Azure/azure-sdk-for-go/profiles/latest/frontdoor/mgmt/frontdoor"
 	"github.com/Azure/azure-sdk-for-go/profiles/latest/mysql/mgmt/mysql"
@@ -922,15 +928,20 @@ func CreateDataFactoriesClientE(subscriptionID string) (*datafactory.FactoriesCl
 }
 
 func CreateManagedEnvironmentsClientE(subscriptionID string) (*armappcontainers.ManagedEnvironmentsClient, error) {
-	cred, err := azidentity.NewDefaultAzureCredential(nil)
-	if err != nil {
-		return nil, err
-	}
-	clientFactory, err := armappcontainers.NewClientFactory(subscriptionID, cred, nil)
+	clientFactory, err := getArmAppContainersClientFactory(subscriptionID)
 	if err != nil {
 		return nil, err
 	}
 	client := clientFactory.NewManagedEnvironmentsClient()
+	return client, nil
+}
+
+func CreateContainerAppsClientE(subscriptionID string) (*armappcontainers.ContainerAppsClient, error) {
+	clientFactory, err := getArmAppContainersClientFactory(subscriptionID)
+	if err != nil {
+		return nil, err
+	}
+	client := clientFactory.NewContainerAppsClient()
 	return client, nil
 }
 
@@ -981,4 +992,54 @@ func getBaseURI() (string, error) {
 		return "", err
 	}
 	return baseURI, nil
+}
+
+// getArmAppContainersClientFactory gets an arm app containers client factory
+func getArmAppContainersClientFactory(subscriptionID string) (*armappcontainers.ClientFactory, error) {
+	targetSubscriptionID, err := getTargetAzureSubscription(subscriptionID)
+	clientCloudConfig, err := getClientCloudConfig()
+	if err != nil {
+		return nil, err
+	}
+	cred, err := azidentity.NewDefaultAzureCredential(&azidentity.DefaultAzureCredentialOptions{
+		ClientOptions: azcore.ClientOptions{
+			Cloud: clientCloudConfig,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	return armappcontainers.NewClientFactory(targetSubscriptionID, cred, &arm.ClientOptions{
+		ClientOptions: policy.ClientOptions{
+			Cloud: clientCloudConfig,
+		},
+	})
+}
+
+func getClientCloudConfig() (cloud.Configuration, error) {
+	envName := getDefaultEnvironmentName()
+	switch strings.ToUpper(envName) {
+	case "AZURECHINACLOUD":
+		return cloud.AzureChina, nil
+	case "AZUREUSGOVERNMENTCLOUD":
+		return cloud.AzureGovernment, nil
+	case "AZUREPUBLICCLOUD":
+		return cloud.AzurePublic, nil
+	case "AZURESTACKCLOUD":
+		env, err := autorestAzure.EnvironmentFromName(envName)
+		if err != nil {
+			return cloud.Configuration{}, err
+		}
+		c := cloud.Configuration{
+			ActiveDirectoryAuthorityHost: env.ActiveDirectoryEndpoint,
+			Services: map[cloud.ServiceName]cloud.ServiceConfiguration{
+				cloud.ResourceManager: {
+					Audience: env.TokenAudience,
+					Endpoint: env.ResourceManagerEndpoint,
+				},
+			},
+		}
+		return c, err
+	}
+	return cloud.Configuration{}, fmt.Errorf("no cloud environment matching the name: %s", envName)
 }

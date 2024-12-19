@@ -5,13 +5,46 @@ import (
 	"testing"
 )
 
-func TestContainerAppsEnvironmentExists(t *testing.T) {
+func TestManagedEnvironmentExists(t *testing.T) {
 	t.Parallel()
 
 	environmentName := ""
 	resourceGroupName := ""
 	subscriptionID := ""
 
-	_, err := ContainerAppsEnvironmentExistsE(environmentName, resourceGroupName, subscriptionID)
+	_, err := ManagedEnvironmentExistsE(environmentName, resourceGroupName, subscriptionID)
+	require.Error(t, err)
+}
+
+func TestGetManagedEnvironmentE(t *testing.T) {
+	t.Parallel()
+
+	environmentName := ""
+	resourceGroupName := ""
+	subscriptionID := ""
+
+	_, err := GetManagedEnvironmentE(environmentName, resourceGroupName, subscriptionID)
+	require.Error(t, err)
+}
+
+func TestContainerAppExists(t *testing.T) {
+	t.Parallel()
+
+	environmentName := ""
+	resourceGroupName := ""
+	subscriptionID := ""
+
+	_, err := ContainerAppExistsE(environmentName, resourceGroupName, subscriptionID)
+	require.Error(t, err)
+}
+
+func TestGetContainerAppE(t *testing.T) {
+	t.Parallel()
+
+	environmentName := ""
+	resourceGroupName := ""
+	subscriptionID := ""
+
+	_, err := GetContainerAppE(environmentName, resourceGroupName, subscriptionID)
 	require.Error(t, err)
 }
